@@ -1,0 +1,46 @@
+cmake_minimum_required (VERSION 3.0)
+
+project(Progression)
+
+option(PROGRESSION_BUILD_EXAMPLES "Build the example programs" ON)
+
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+option(PROGRESSION_AUDIO "Enable the progression audio system" OFF)
+
+if (UNIX AND NOT APPLE)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CPP_VERSION} -g")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CPP_VERSION} -O3")
+elseif (MSVC)
+    #add_compile_options("/std:c++11")
+endif()
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+if (NOT PROGRESSION_DIR)
+    set(PROGRESSION_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+endif()
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   ${CMAKE_BINARY_DIR}/lib)
+
+# Disable building extras we won't need (pure C++ project)
+set(GLFW_BUILD_EXAMPLES  OFF CACHE BOOL " " FORCE)
+set(GLFW_BUILD_TESTS     OFF CACHE BOOL " " FORCE)
+set(GLFW_BUILD_DOCS      OFF CACHE BOOL " " FORCE)
+
+add_subdirectory(ext/glfw)
+
+add_subdirectory(progression)
+
+if (PROGRESSION_BUILD_EXAMPLES)
+    add_subdirectory(examples/)
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT demo)
+endif()
+
+add_subdirectory(tools/)

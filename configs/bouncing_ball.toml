@@ -1,0 +1,17 @@
+[window]
+    width = 1920
+    height = 1080
+    title = "Rendering Pipelines"
+
+[resourceManager]
+
+[time]
+    displayFPS = true
+
+[renderSystem]
+    maxNumLights = 10001
+    lightIntensityCutoff = 0.03
+
+[app]
+    numBalls = 10000
+    intensity = 2.0
